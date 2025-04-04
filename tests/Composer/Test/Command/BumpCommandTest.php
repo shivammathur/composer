@@ -64,7 +64,10 @@ class BumpCommandTest extends TestCase
         $dir = $this->initTempComposer([]);
         $composerJsonPath = $dir . '/composer.json';
         chmod($composerJsonPath, 0444);
-        self::assertEquals('0444', substr(sprintf('%o', fileperms($composerJsonPath);), -4));
+
+        $changedPermissions = fileperms($composerJsonPath);
+        $expectedChangedPermissions = substr(sprintf('%o', $changedPermissions), -4);
+        self::assertEquals('0444', $expectedChangedPermissions);
 
         $appTester = $this->getApplicationTester();
         self::assertSame(1, $appTester->run(['command' => 'bump'], ['capture_stderr_separately' => true]));
